@@ -1,5 +1,12 @@
 package com.ab.basic
 
+/**
+ *
+ * A val modifier is used to define variables that are immutable
+ * A var modifier is used to define variables that are mutable
+ * A def keyword is used to define methods which are evaluated each time they are invoked
+ *
+ */
 object PrimitiveTypes extends App{
   var aByte: Byte = 10
   var aShort: Short = 10
@@ -20,4 +27,17 @@ object PrimitiveTypes extends App{
 
   var aNull1: Null = null;
   //var aNull2: Null = 1;
+
+
+  var num_1: Int = 10;
+  var num_2 = 20;
+
+  num_1 = -30;
+
+  val num_3: Int = 10;
+  val num_4 = 20;
+
+  //num_3 = 40; //not allowed
+
+  var str1: String = "said";
 }

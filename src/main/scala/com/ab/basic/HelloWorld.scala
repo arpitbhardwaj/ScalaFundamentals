@@ -1,17 +1,25 @@
 package com.ab.basic
 
-object HelloWorld extends App {
-  println("Hello World");
+/**
+ *
+ * Scala is both object oriented and functional
+ *
+ * Functional Languages and Distributed Systems Connections
+ * Functions as First Class Citizens
+ *    Functions can be passed and returned from functions
+ * Function Composition
+ *    Chains of Function calling each other
+ * Immutable Data
+ *    Prevent inadvertently introduced side effects
+ * Pure Functions
+ *    no side effects: same output for same input
+ * Ease of Parallelism
+ *    pure functions acting on immutable data
+ */
+object HelloWorld /*extends App */{
 
-  var num_1: Int = 10;
-  var num_2 = 20;
-
-  num_1 = -30;
-
-  val num_3: Int = 10;
-  val num_4 = 20;
-
-  //num_3 = 40; //not allowed
-
-  var str1: String = "said";
+  def main(args : Array[String]):Unit = {
+    println("Hello World");
+  }
+  //println("Hello World");
 }
