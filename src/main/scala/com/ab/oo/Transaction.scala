@@ -1,6 +1,8 @@
 package com.ab.oo
 
-
+/**
+ * Traits are equivalent to interface in java
+ */
 trait User{
   def getFirst:String
   def getLast:String

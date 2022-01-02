@@ -2,6 +2,9 @@ package com.ab.oo
 
 import java.time.LocalDateTime
 
+/**
+ * Case classes are used to model immutable data and can be constructed without the new keyword
+ */
 sealed trait Kind
 case object Debit extends Kind
 case object Credit extends Kind
