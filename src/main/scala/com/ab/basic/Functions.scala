@@ -13,7 +13,7 @@ package com.ab.basic
  * Do not accept type paramaters or parameters default values
  */
 object Functions extends App {
-  val data = Array("F","A","G")
+  val data = Array("FB","APP","GOOG")
   //method
   //def getNumRowsMethod(): Int = data.length
   def getNumRowsMethod: Int = data.length //emmty param methods
@@ -29,4 +29,16 @@ object Functions extends App {
   println(getNumRowsFunction.apply())
   //getNumRowsFunction implements the trait Function0
   println(getNumRowsFunction.isInstanceOf[Function0[_]])
+
+  def existsMethod(ticker:String):Boolean = data.contains(ticker)
+  val existsFunction = (ticker:String) => data.contains(ticker)
+
+  //create a function object from a method; this uses partially applied functions
+  val existsFunction2 = existsMethod _
+  val existsFunction3 = (ticker:String) => existsMethod(ticker)
+
+  println("Does FB exists (method): " + existsMethod("FB"))
+  println("Does TM exists (function): " + existsFunction("TM"))
+  println("Does GOOG exists (function): " + existsFunction2("GOOG"))
+  println("Does APP exists (function): " + existsFunction3("APP"))
 }
