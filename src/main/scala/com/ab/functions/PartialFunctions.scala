@@ -20,8 +20,4 @@ object PartialFunctions extends App{
   }
   println("Defined at 8: " + anotherDivide64By.isDefinedAt(8))
   println(if(anotherDivide64By.isDefinedAt(0)) anotherDivide64By(0))
-
-
-
-
 }
