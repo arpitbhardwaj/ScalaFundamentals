@@ -24,11 +24,14 @@ object PrimitiveTypes extends App{
 
   var arr1: Array[Int] = Array(1,2);
   var arr2: AnyRef = Array(1,2);
+  println(arr1(1))
   //var arr3: AnyVal = Array(1,2);
 
   var aNull1: Null = null;
   //var aNull2: Null = 1;
 
+  //Nothing is the return type for methods which never return normally.
+  
   var num_1: Int = 10;
   var num_2 = 20;
   num_1 = -30;
