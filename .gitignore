@@ -5,3 +5,6 @@
 /project/project/target/
 .idea
 null
+
+calculators/target
+api/target
