@@ -1,9 +1,6 @@
 name := "ScalaFundamentals"
-
 version := "0.1"
-
 scalaVersion := "2.13.7"
-
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % "test"
 
 /*
@@ -37,15 +34,15 @@ randomInt := {
   scala.util.Random.nextInt
 }
 
-lazy val root = project.in(file("."))
-  .aggregate(calculators)
-lazy val calculators = project
+//sbt creates the aggreagate relationship for you implicitly
+/*lazy val root = project.in(file("."))
+  .aggregate(calculators)*/
+
+lazy val calculators = project.settings(
+  libraryDependencies ++= Dependencies.calculatorDependencies
+)
 
 lazy val api = project.settings(
-  libraryDependencies ++= Seq(
-    "com.lihaoyi" %% "requests" % "0.1.7",
-    "org.scala-lang.modules" %% "scala-xml" % "1.1.1",
-    "org.scalatest" %% "scalatest" % "3.2.10" % "test"
-  )
+  libraryDependencies ++= Dependencies.apiDependencies
 
 )
