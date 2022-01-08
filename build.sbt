@@ -1,3 +1,5 @@
+import com.typesafe.sbt.packager.docker.ExecCmd
+
 name := "ScalaFundamentals"
 version := "0.1"
 scalaVersion := "2.13.7"
@@ -38,11 +40,26 @@ randomInt := {
 /*lazy val root = project.in(file("."))
   .aggregate(calculators)*/
 
-lazy val calculators = project.settings(
-  libraryDependencies ++= Dependencies.calculatorDependencies
+lazy val calculators = project
+  .dependsOn(api)
+  .enablePlugins(JavaAppPackaging)
+  .enablePlugins(DockerPlugin)
+  .settings(
+  libraryDependencies ++= Dependencies.calculatorDependencies,
+    //as we have multiple main calss we need to override the entrypoint
+    //docker:publish
+    //docker run -it calculators:0.1.0-SNAPSHOT 100 20
+    dockerCommands := dockerCommands.value.filterNot{
+      case ExecCmd("ENTRYPOINT", _) => true
+      case _ => false
+    },
+    dockerCommands ++= Seq(ExecCmd("ENTRYPOINT","/opt/docker/bin/net-worth"))
+
 )
 
-lazy val api = project.settings(
+lazy val api = project
+  .enablePlugins(JavaAppPackaging)
+  .settings(
   libraryDependencies ++= Dependencies.apiDependencies
 
 )
