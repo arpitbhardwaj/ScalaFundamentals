@@ -5,7 +5,7 @@ import scala.xml.XML
 
 object Forex {
 
-  def getExchangeRates():Map[String,Double] = {
+  def getExchangeRates:Map[String,Double] = {
     val apiUrl = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
     val response = requests.get(apiUrl)
     val xmlRespose = XML.loadString(response.text)
@@ -16,9 +16,9 @@ object Forex {
     currencyCodeMultiplier
   }
 
-  def getRatesAsJson():String = compact(render(getExchangeRates()))
+  def getRatesAsJson():String = compact(render(getExchangeRates))
 
   def main(args: Array[String]):Unit = {
-    println(getExchangeRates())
+    println(getExchangeRates)
   }
 }

@@ -3,6 +3,7 @@ package com.ab.basic
 object Conditional extends App {
   val num = 10
 
+  //if condition are also expression (as they yield value)
   val sym1: Unit = if (num > 10){
     println(">10")
   }else{
@@ -17,5 +18,5 @@ object Conditional extends App {
     "<=10"
   }
 
-  val sym3: String = if (num > 10) ">10" else if(num == 10)"=10"else "<=10"
+  val sym3: String = if (num > 10) ">10" else if(num == 10)"=10" else "<=10"
 }

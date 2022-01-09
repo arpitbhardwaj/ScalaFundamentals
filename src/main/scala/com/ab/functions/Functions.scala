@@ -15,7 +15,7 @@ package com.ab.functions
  * First class entities on par with classes
  * Do not accept type parameters or parameters default values
  */
-object Functions extends App {
+object  Functions extends App {
   val data = Array("FB", "APP", "GOOG")
 
   //method
