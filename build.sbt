@@ -1,10 +1,11 @@
 import com.typesafe.sbt.packager.docker.ExecCmd
 
 name := "ScalaFundamentals"
-version := "0.1"
+ThisBuild/version := "0.1"
 scalaVersion := "2.13.7"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % "test"
-
+ThisBuild/licenses ++= Seq(("MIT",url("http://opensource.org/licenses/MIT")))
+publish/skip := true //do not wabt to publish the root project
 /*
 SeetingKey[T] Computes once per project
 TaskKey[T] Recomputed everytime called
