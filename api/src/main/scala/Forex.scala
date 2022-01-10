@@ -16,7 +16,7 @@ object Forex {
     currencyCodeMultiplier
   }
 
-  def getRatesAsJson():String = compact(render(getExchangeRates))
+  def getRatesAsJson:String = compact(render(getExchangeRates))
 
   def main(args: Array[String]):Unit = {
     println(getExchangeRates)

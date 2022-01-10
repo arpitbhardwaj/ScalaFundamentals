@@ -32,14 +32,14 @@ object Loops extends App {
   List(1,2,3).foreach(num => println(num*20))
 
   //
-  var i1 =1;
+  var i1 =1
   while (i1<10){
     print(i1)
     i1+=1
   }
   println()
 
-  var i2 = 10;
+  var i2 = 10
   do {
     print(i2)
     i2-=1

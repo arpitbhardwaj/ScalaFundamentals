@@ -7,7 +7,7 @@ object StockAnalysis extends App {
     val source = io.Source.fromFile("src/main/resources/GOOG.csv")
     //for expression
     for{
-      line <- source.getLines().drop(1).toVector
+      line <- source.getLines().drop(1).toVector //generator dropping the first header row
       cols = line.split(",").map(_.trim)
     }yield StockRecord(
       cols(0),

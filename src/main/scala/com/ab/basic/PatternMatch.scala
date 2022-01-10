@@ -58,12 +58,32 @@ object PatternMatch extends App {
   }
 
   //a tuple is a collection like an array but doesn't require the element of the same type
-
   val aTuple = ("NZD",100)
   println(aTuple._1)
 
   aTuple match {
     case (c,a) if c == "NZD" => println("NZD " + amount * (1/1.50))
+  }
+
+  //finding elements using pattern match
+  //extractor pattern
+  val names = List("Dale","Susan","Bob","Jen")
+  names match {
+    case List("Dale",_,_) => println("Dale") //throws match error if there is no default case
+    case List(_,"Susan",_*) => println("Susan")
+    case _ => println("Not found")
+  }
+  //constructor pattern match
+  //allows to match against the arguments that were used to construct the case class
+  //uses unapply method under the hood
+  //so basically constructor uses apply of case class and constructor match use unapply
+  //apply(a,b) -> object(a,b)
+  //unapply(object(a,b)) -> a,b
+
+  val person  = Person("Arpit",32)
+  person match {
+    case Person("Dale",_) => println("found Dale")
+    case Person("Arpit",_) => println("found Arpit")
   }
 }
 
@@ -71,4 +91,6 @@ abstract class Currency
 case class USD() extends Currency
 case class CAD() extends Currency
 case class NZD() extends Currency
+
+case class Person(name:String, age:Int)
 

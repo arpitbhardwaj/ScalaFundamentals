@@ -15,7 +15,7 @@ object NetWorthMultiCurrency {
 }
 
 object Currency{
-  val currencyConverter: Map[String,Double] = Forex.getExchangeRates()
+  val currencyConverter: Map[String,Double] = Forex.getExchangeRates
 
   def apply(value:String):Currency = {
     val Array(amountString:String, currencyCode:String) = value.split("\\s")
