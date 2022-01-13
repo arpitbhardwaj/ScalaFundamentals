@@ -32,7 +32,7 @@ object PrimitiveTypes extends App{
 
   //Nothing is the return type for methods which never return normally.
   
-  var num_1: Int = 10;
+  var num_1: Int = 10; //var stands for variable
   var num_2 = 20;
   num_1 = -30;
 
@@ -51,7 +51,7 @@ object PrimitiveTypes extends App{
   println("------------------")
   data.foreach(println)
 
-  val num_3: Int = 10;
+  val num_3: Int = 10; //val stands for values
   val num_4 = 20;
   //num_3 = 40; //not allowed
 

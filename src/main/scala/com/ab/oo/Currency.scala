@@ -1,5 +1,6 @@
 package com.ab.oo
 
+
 /**
  * @Arpit Bhardwaj
  *
@@ -9,6 +10,8 @@ package com.ab.oo
  *  contain methods and variables which does not depend on the state of object
  *  apply method in companion object help you to create instances without using new keyword
  */
+
+//companion object (singleton object)
 object Currency{
   private val conversionMap: Map[String,Double] = Map("CAD"->1/1.30,"NZD"->1/1.50)
   /*def apply(code:String, amount:Double) = new Currency(code,amount)
@@ -74,6 +77,6 @@ object CurrencyRunner extends App{
   val usd2 = createUSD(26)
   println(usd2)
 
-  val nzd2:Currency = "NZD 25"
+  val nzd2:Currency = "NZD 25" //compiler calls string2Currency under the hood
   println(nzd2)
 }

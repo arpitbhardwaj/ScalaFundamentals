@@ -1,6 +1,7 @@
 package com.ab.collection
 
 //generic list
+//+ represents covariant
 trait CustomList[+A]{
   def head:A
   def tail: CustomList[A]
