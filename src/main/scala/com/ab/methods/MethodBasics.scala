@@ -2,22 +2,24 @@ package com.ab.methods
 
 /**
  * Functions and Methods are the terms used interchangeable but there are subtle differences
- * Functions are objects; methods are not
- * Methods can be stored in function objects quite easily using method coercing
- * Methods are associated with a class; functions are not
+ *    Functions are objects; methods are not
+ *    Methods can be stored in function objects quite easily using method coercing
  *
- * A method is a reusable code and is defined using def keyword.
- * It is a part of a class, it has name, signature some annotations and bytecode
+ * A method
+ *    is a reusable code and is defined using def keyword.
+ *    is a part of a class, it has name, signature some annotations and bytecode
  *
  * In case you need a method that mutates the data but does not return anything, you can opt for procedures
- * A method defined using just curly braces and no '=' sign is a procedure
- *    A procedure does not return anything, its result type is always unit
+ *
+ * A Procedure
+ *    is defined using just curly braces and no '=' sign
+ *    does not return anything, its result type is always unit
  *
  * Mentioning return type is optional as it will be inferred by compiler
  * Curly braces are optional is single statement methods
  * return keyword is also optional. the last expression is evaluated to return by compiler
  */
-object Methods extends App {
+object MethodBasics extends App {
 
   def volume: Int = 1000 //method takes no input argument and returns integer 1000
   def stockPrice: Int = 79
@@ -63,7 +65,22 @@ object Methods extends App {
     println("Sum of a and b is: " + (a+b))
   }
 
-  val result = Methods.computeSum(5,4)
+  val result = MethodBasics.computeSum(5,4)
   println("Result is: " + result)
-  Methods.printSum(2,3)
+  MethodBasics.printSum(2,3)
+
+  //convert method to a function; this uses partially applied functions and process is called method coercing
+
+  val tickers = Array("FB", "APP", "GOOG")
+
+  def existsMethod(ticker: String): Boolean = tickers.contains(ticker)
+  val existsFunction = (ticker: String) => tickers.contains(ticker)
+  val existsFunction2 = (ticker: String) => existsMethod(ticker)
+  //syntactic sugar
+  val existsFunction3 = existsMethod _
+
+  println("Does FB exists (method): " + existsMethod("FB"))
+  println("Does TM exists (function): " + existsFunction("TM"))
+  println("Does APP exists (function): " + existsFunction2("APP"))
+  println("Does GOOG exists (function): " + existsFunction3("GOOG"))
 }

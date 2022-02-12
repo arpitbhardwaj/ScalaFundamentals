@@ -34,8 +34,6 @@ object Currency{
   def createNZD(amount:Double):Currency = Currency("NZD",amount)
   def createCAD(amount:Double):Currency = Currency("CAD",amount)
 
-  //implicit tells scala compiler to find the opportunities where string is provided and currency is expected
-  //and use this method behind the scenes
   implicit def string2Currency(money:String):Currency = {
     val Array(code:String,value:String) =  money.split("\\s")
     val requestedAmount:Double = value.toDouble
