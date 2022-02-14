@@ -1,5 +1,7 @@
 package com.ab.methods
 
+import scala.annotation.tailrec
+
 /**
  * Functions and Methods are the terms used interchangeable but there are subtle differences
  *    Functions are objects; methods are not
@@ -25,7 +27,7 @@ object MethodBasics extends App {
   def stockPrice: Int = 79
   def finalVal: Int = stockPrice * volume
   println("Final value is: " + finalVal)
-  //println(s"Final value is: $finalVal")
+  println("---------------------")
 
   def volume1: Int = {
     println("Returning volume")
@@ -41,6 +43,7 @@ object MethodBasics extends App {
 
   def finalVal1Again: Int = stockPrice1 * volume1
   println(s"Final value is: $finalVal1Again")
+  println("---------------------")
 
   def data: Array[String] = {
     println("Array is initialized")
@@ -48,19 +51,18 @@ object MethodBasics extends App {
   }
   println("Before accessing data")
   data.foreach(println)
-  println("\n------------------")
+  println("------------------")
   data.foreach(println)
-
 
   def computeSum(a:Int,b:Int): Int = {
     a+b
-    //return a+b
+    //return a+b //can omit return keyword
   }
 
+  //Procedure (return Unit hence can omit =)
   /*def printSum(a:Int,b:Int):Unit = {
     println("Sum of a and b is: " + (a+b))
   }*/
-
   def printSum(a:Int,b:Int) {
     println("Sum of a and b is: " + (a+b))
   }
@@ -70,7 +72,6 @@ object MethodBasics extends App {
   MethodBasics.printSum(2,3)
 
   //convert method to a function; this uses partially applied functions and process is called method coercing
-
   val tickers = Array("FB", "APP", "GOOG")
 
   def existsMethod(ticker: String): Boolean = tickers.contains(ticker)
@@ -83,4 +84,26 @@ object MethodBasics extends App {
   println("Does TM exists (function): " + existsFunction("TM"))
   println("Does APP exists (function): " + existsFunction2("APP"))
   println("Does GOOG exists (function): " + existsFunction3("GOOG"))
+
+  //parameter less function
+  def aParameterlessFunc():Int = 42
+  println(aParameterlessFunc())
+  println(aParameterlessFunc)
+
+  //when you need loops, write recursive function (which is true functional programming)
+  //writing loops is imperative programming
+  //type inference by compiler not possible in recursive function, hence cannot be omitted
+
+  def aRepeatedFunc(str: String, n:Int):String = {
+    if (n == 1) str
+    else str + aRepeatedFunc(str,n-1)
+  }
+  println(aRepeatedFunc("Hello",3))
+
+  //you can define values, variable and even function in code blocks
+  def aBigFunc(n:Int):Int = {
+    def aSmallFunc(a:Int,b:Int):Int = a+b //auxiliary function
+    aSmallFunc(n,n-1)
+  }
+  println(aBigFunc(4))
 }

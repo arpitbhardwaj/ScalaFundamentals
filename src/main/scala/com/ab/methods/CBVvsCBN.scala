@@ -3,8 +3,6 @@ package com.ab.methods
 import com.ab.oo.StockTickerRecord
 
 /**
- *@Arpit Bhardwaj
- *
  * Call by value
  *    is the strict evaluation strategy that scala uses by default
  *    the expressions corresponding to input arguments are evaluated before the function body is executed
@@ -13,7 +11,20 @@ import com.ab.oo.StockTickerRecord
  *    is the non strict evaluation strategy that scala
  *    the expressions corresponding to input arguments are evaluated only when the program needs it
  */
-object EvaluationStrategies extends App {
+object CBVvsCBN extends App {
+
+  def callByValue(x:Long):Unit = {
+    println("by value: " + x)
+    println("by value: " + x)
+  }
+
+  def callByName(x: => Long):Unit = {
+    println("by name: " + x)
+    println("by name: " + x)
+  }
+
+  callByValue(System.nanoTime())
+  callByName(System.nanoTime())
 
   val readFinanceData = () => {
     val source = io.Source.fromFile("src/main/resources/stockMarketData.csv")
@@ -54,7 +65,7 @@ object EvaluationStrategies extends App {
   def momentumStrategy2(record: => StockTickerRecord,percentDelta:Float):Unit = {
     println("Calculating percentage move")
 
-    //to avoid call by name below aprroach can also be used
+    //to avoid call by name below approach can also be used
     lazy val stockRecord = record
 
     val percentMove = ((stockRecord.close - stockRecord.open) / stockRecord.open) * 100

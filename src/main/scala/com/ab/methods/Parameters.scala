@@ -21,7 +21,7 @@ import scala.annotation.tailrec
  *    In order to apply the tail recursion optimization the recursive has to be the last call in method
  */
 object Parameters extends App {
-  //empty parem method
+  //empty param method
   def readFinanceData():Vector[StockRecord] = {
     val source = io.Source.fromFile("src/main/resources/GOOG.csv")
     //for expression
