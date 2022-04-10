@@ -23,7 +23,7 @@ import scala.annotation.tailrec
 object Parameters extends App {
   //empty param method
   def readFinanceData():Vector[StockRecord] = {
-    val source = io.Source.fromFile("src/main/resources/GOOG.csv")
+    val source = scala.io.Source.fromFile("src/main/resources/GOOG.csv")
     //for expression
     for{
       line <- source.getLines().drop(1).toVector

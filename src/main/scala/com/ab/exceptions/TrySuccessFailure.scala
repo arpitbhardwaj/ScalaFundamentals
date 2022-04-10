@@ -38,7 +38,7 @@ object TrySuccessFailure extends App {
   }
 
   def readFinanceData(filePath:String):Seq[DividendRecord] = {
-    val source = io.Source.fromFile(filePath)
+    val source = scala.io.Source.fromFile(filePath)
     //for expression
     for{
       line <- source.getLines().drop(1).toVector

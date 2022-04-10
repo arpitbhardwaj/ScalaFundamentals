@@ -6,6 +6,16 @@ scalaVersion := "2.13.7"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.10" % "test"
 ThisBuild/licenses ++= Seq(("MIT",url("http://opensource.org/licenses/MIT")))
 publish/skip := true //do not wabt to publish the root project
+
+val circeVersion = "0.14.1"
+
+libraryDependencies ++= Seq(
+  "io.circe" %% "circe-core",
+  "io.circe" %% "circe-generic",
+  "io.circe" %% "circe-parser",
+  "io.circe" %% "circe-generic-extras"
+).map(_ % circeVersion)
+
 /*
 SeetingKey[T] Computes once per project
 TaskKey[T] Recomputed everytime called

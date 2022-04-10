@@ -27,7 +27,7 @@ object CBVvsCBN extends App {
   callByName(System.nanoTime())
 
   val readFinanceData = () => {
-    val source = io.Source.fromFile("src/main/resources/stockMarketData.csv")
+    val source = scala.io.Source.fromFile("src/main/resources/stockMarketData.csv")
     //for expression
     for{
       line <- source.getLines().drop(1).toVector

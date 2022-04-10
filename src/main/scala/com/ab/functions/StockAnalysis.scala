@@ -4,7 +4,7 @@ import com.ab.oo.{StockRecord, StockTickerRecord}
 
 object StockAnalysis extends App {
   val readFinanceData = () => {
-    val source = io.Source.fromFile("src/main/resources/GOOG.csv")
+    val source = scala.io.Source.fromFile("src/main/resources/GOOG.csv")
     //for expression
     for{
       line <- source.getLines().drop(1).toVector //generator dropping the first header row
@@ -53,7 +53,7 @@ object StockAnalysis extends App {
   println(getDailyDelta(record(0).open,record(0).close,_-_))
 
   val readFinanceData2 = () => {
-    val source = io.Source.fromFile("src/main/resources/stockMarketData.csv")
+    val source = scala.io.Source.fromFile("src/main/resources/stockMarketData.csv")
     //for expression
     for{
       line <- source.getLines().drop(1).toVector

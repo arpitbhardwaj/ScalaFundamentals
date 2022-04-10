@@ -8,6 +8,8 @@ object Dependencies {
   val akkaStream = "com.typesafe.akka" %% "akka-stream" % "2.6.18"
   val json4s = "org.json4s" %% "json4s-native" % "3.6.5"
 
+
+
   val commonDependencies: Seq[ModuleID] = Seq(scalaTest % Test)
 
   val apiDependencies:Seq[ModuleID] = Seq(scalaRequest,scalaXml,akkaHttp,akkaStream,json4s) ++ commonDependencies
