@@ -3,7 +3,6 @@ package com.ab.circe
 import io.circe.{ACursor, Decoder, Encoder, HCursor, Json, DecodingFailure, JsonObject}
 import io.circe.generic.extras._
 import io.circe.jawn.{JawnParser, decode}
-import cats.implicits.catsSyntaxTuple2Semigroupal
 
 import java.util.UUID
 import scala.util.{Failure, Success, Try}
@@ -21,8 +20,7 @@ sealed trait ResponseConfig {
   def mediaChannel: String
 }
 
-case class PlayMessageConfig(//promptsTts: List[Prompt],
-                             prompts: List[Prompt],
+case class PlayMessageConfig(prompts: List[Prompt],
                              bargeIn: String,
                              connector: String,
                              inputLanguage: Option[String] = Some("en-US"),
@@ -39,45 +37,23 @@ object ResponseConfig {
   implicit val config: Configuration = Configuration.default.withDefaults
 
   implicit val responseConfigDecoder: Decoder[ResponseConfig] = deriveDecoder[ResponseConfig]
-  //implicit val PromptDecoder: Decoder[Prompt] = deriveDecoder[Prompt]
 
-  implicit final val FileDecoder: Decoder[Prompt] =
+  implicit final val PromptDecoder: Decoder[Prompt] =
     Decoder.instance { cursor =>
-      (
-        cursor.get[String](k = "type"),
-        cursor.get[String](k = "value")
-        ).mapN(Prompt.apply)
+      for {
+        key <- cursor.get[String]("type")
+        value <- cursor.get[String]("value")
+      }yield{
+        Prompt(key, value)
+      }
     }.or(
       Decoder[String].map(value => Prompt(`type` = "audioFile", value))
     )
 
-  /*implicit val PromptDecoder: Decoder[Prompt] = deriveDecoder[Prompt].prepare { (aCursor: ACursor) =>
-  {
-    aCursor.withFocus(json => {
-      json.mapArray(jsonArr => {
-        if (!jsonArr.contains("type")){
-          Json.arr(
-            Json.fromFields(
-              Seq(
-                ("type", Json.fromString("audio")),
-                ("value", Json.fromString("")
-              )
-            )
-          )
-          )
-        } else {
-          jsonArr
-        }
-      })
-    })
-  }
-  }*/
-
-  //implicit val playMessageConfigDecoder: Decoder[PlayMessageConfig] = deriveDecoder[PlayMessageConfig]
-
   implicit val playMessageConfigDecoder: Decoder[PlayMessageConfig] = (h:HCursor) =>
     for {
-      prompts <- h.get[List[Prompt]]("prompts").orElse(h.get[List[Prompt]]("promptsTts"))
+      promptTts <- h.get[List[Prompt]]("promptsTts")
+      prompts <- if (promptTts.isEmpty) h.get[List[Prompt]]("prompts") else h.get[List[Prompt]]("promptsTts")
       bargeIn <- h.downField("bargeIn").as[String]
       connector <- h.downField("connector").as[String]
       inputLanguage <- h.downField("inputLanguage").as[Option[String]]
@@ -138,7 +114,7 @@ object Exercise{
         |	"messageType": "PlayMessageResponse",
         |	"interactionId": "d9d1d025-e376-4f9d-bee4-72b594c2509b",
         |	"config": {
-        |		"prompts": ["welcome.wav"],
+        |		"prompts": ["welcome.wav","book_a_room.wav"],
         |		"promptsTts": [],
         |		"bargeIn": "false",
         |		"connector": "2887e88c-1fbf-424c-9e53-0c11f630b870",
@@ -211,24 +187,8 @@ object Exercise{
         |""".stripMargin
 
 
-    (new JawnParser).parse(inputString3) match {
+    (new JawnParser).parse(inputString2) match {
        case Right(jsonObj) =>
-
-         for{
-           jObj <- jsonObj.asObject
-           config <- jObj("config")
-           configObj <- config.asObject
-           prompts <- configObj("newFiles")
-           promptsArr <- prompts.asArray
-           promptsTts <- configObj("oldFiles")
-           promptsTtsArr <- promptsTts.asArray
-         } yield {
-           if(promptsArr.size == 0){
-             configObj.remove("newFiles")
-           }else if(promptsTtsArr.size == 0){
-             configObj.remove("oldFiles")
-           }
-         }
 
          Try(decode[Response](jsonObj)) match {
            case Success(response) =>

@@ -39,7 +39,8 @@ object Product {
   }
 }
 
-//Decoding Arrays
+/*******************************************Decoding Arrays***********************************************/
+
 case class Book(book: String)
 
 object Book {
@@ -63,7 +64,8 @@ object Book {
   }
 }
 
-//Decoding Automatically
+/*******************************************Decoding Automatically***********************************************/
+
 case class Form(firstName: String, lastName: String, age: Int, email: Option[String])
 
 object Form {
@@ -85,7 +87,8 @@ object Form {
   }
 }
 
-//Decoding Manually
+/*******************************************Decoding Manually***********************************************/
+
 case class Applicant(name: String, age: Int, phoneNumber: String)
 
 object Applicant {
@@ -115,7 +118,8 @@ object Applicant {
   }
 }
 
-//Decoding an Arrays of Objects of Arrays
+/*******************************************Decoding an Arrays of Objects of Arrays***********************************************/
+
 case class ProductResource(name: String, campaignResources: List[Int], discountPrice: List[Int])
 
 object voucher {
@@ -189,7 +193,8 @@ object voucher {
   }
 }
 
-//Handling Class with Default on Non-Optional Field
+/********************************Handling Class with Default on Non-Optional Field************************************/
+
 case class Company(industry: String, year: Int, name: String, public: Boolean)
 
 object Company {
@@ -257,38 +262,7 @@ object Company2 {
   }
 }
 
-
-/*case class Config(files: List[String],
-                              channel: String = "BC")
-
-object Config{
-  implicit val playMessageConfigDecoder: Decoder[Config] = deriveDecoder[Config]
-}
-
-case class Inventory(config: Config)
-
-object Inventory {
-  implicit val responseDecoder: Decoder[Inventory] = deriveDecoder[Inventory]
-}
-
-object RealTime {
-  def main(args: Array[String]): Unit = {
-    val inputString =
-      """
-        |{
-        |	"config": {
-        |		"files": ["welcome"],
-        |		"channel": "media"
-        |	}
-        |}
-        |""".stripMargin
-
-    parser.decode[Inventory](inputString) match {
-      case Right(company) => println(company)
-      case Left(ex) => println(s"ooops something wrong ${ex}")
-    }
-  }
-}*/
+/********************************************************************/
 
 case class File(`type`: String, value: String)
 
@@ -296,78 +270,16 @@ case class Config(files: List[File],
                   channel: String = "BC")
 
 object Config{
-  //implicit val FileDecoder: Decoder[File] = deriveDecoder[File]
+  implicit val FileDecoder: Decoder[File] = deriveDecoder[File]
 
-  implicit final val FileDecoder: Decoder[File] =
-    Decoder.instance { cursor =>
-      (
-        cursor.get[String](k = "type"),
-        cursor.get[String](k = "value")
-        ).mapN(File.apply)
-    }.or(
-      Decoder[String].map(value => File(`type` = "audio", value))
-    )
-
-  /*implicit val FileDecoder: Decoder[File] = (h:HCursor) =>
+  implicit val ConfigDecoder: Decoder[Config] = (h:HCursor) =>
     for {
-      t <- Json.fromString("audioFile").as[String]
-      v <- Json.fromString(h.value.asString.get).as[String]
-    }yield{
-      File(`type` = t, value = v)
-    }*/
-
-  //Working code DND
-  /*implicit val FileDecoder: Decoder[File] = (h:HCursor) =>
-    {
-      if(h.value.asString == None){
-        for {
-          t <- h.get[String]("type")
-          v <- h.get[String]("value")
-        }yield{
-          File(`type` = t, value = v)
-        }
-      }else{
-        for {
-          t <- Json.fromString("audioFile").as[String]
-          v <- Json.fromString(h.value.asString.getOrElse("")).as[String]
-        }yield{
-          File(`type` = t, value = v)
-        }
-      }
-    }*/
-
-  /*implicit final val FileDecoder: Decoder[File] =
-    Decoder.instance { cursor =>
-      val file = cursor.value.asString.getOrElse("")
-      if (file == ""){
-        (
-          cursor.getOrElse[String](k = "type")(fallback = "audio"),
-          cursor.getOrElse[String](k = "value")(fallback = file)
-          ).mapN(File.apply)
-      }else{
-        cursor.withFocus(_ => Json.arr(
-          Json.fromFields(
-            Seq(
-              ("type", Json.fromString("audio")),
-              ("value", Json.fromString(file))
-            )
-          )
-        )
-        )
-      }
-
-    }*/
-
-  implicit val ConfigDecoder: Decoder[Config] = deriveDecoder[Config]
-
-  /*implicit val ConfigDecoder: Decoder[Config] = (h:HCursor) =>
-    for {
-      filesNew <- h.getOrElse[List[File]]("files")(List())
-      files <- h.getOrElse[List[String]]("files")(List())
+      oldFiles <- h.get[List[File]]("oldFiles")
+      files <- if (oldFiles.isEmpty) h.get[List[File]]("newFiles") else h.get[List[File]]("oldFiles")
       channel <- h.downField("channel").as[String]
     }yield{
-      Config(filesNew, files, channel)
-    }*/
+      Config(files, channel)
+    }
 }
 
 case class Inventory(config: Config)
@@ -377,6 +289,70 @@ object Inventory {
 }
 
 object RealTime {
+  def main(args: Array[String]): Unit = {
+    val inputString1 =
+      """
+        |{
+        |	"config": {
+        |		"newFiles": [{
+        |			"type": "audio",
+        |			"value": "welcome1.mp3"
+        |		}],
+        |		"oldFiles": [],
+        |		"channel": "BC"
+        |	}
+        |}
+        |""".stripMargin
+
+    val inputString2 =
+      """
+        |{
+        |	"config": {
+        |		"newFiles": [],
+        |		"oldFiles": [{
+        |			"type": "audio",
+        |			"value": "welcome2.mp3"
+        |		}],
+        |		"channel": "BC"
+        |	}
+        |}
+        |""".stripMargin
+
+    parser.decode[Inventory](inputString2) match {
+      case Right(company) => println(company)
+      case Left(ex) => println(s"ooops something wrong ${ex}")
+    }
+  }
+}
+
+/********************************************************************/
+case class File3(`type`: String, value: String)
+
+case class Config3(files: List[File3],
+                  channel: String = "BC")
+
+object Config3{
+  implicit final val FileDecoder: Decoder[File3] =
+    Decoder.instance { cursor =>
+      for {
+        key <- cursor.get[String]("type")
+        value <- cursor.get[String]("value")
+      }yield{
+        File3(key, value)
+      }
+    }.or(
+      Decoder[String].map(value => File3(`type` = "audioFile", value))
+    )
+  implicit val ConfigDecoder: Decoder[Config3] = deriveDecoder[Config3]
+}
+
+case class Inventory3(config: Config3)
+
+object Inventory3 {
+  implicit val InventoryDecoder: Decoder[Inventory3] = deriveDecoder[Inventory3]
+}
+
+object RealTime3 {
   def main(args: Array[String]): Unit = {
     val inputString1 =
       """
@@ -406,13 +382,14 @@ object RealTime {
         |}
         |""".stripMargin
 
-    parser.decode[Inventory](inputString2) match {
+    parser.decode[Inventory3](inputString1) match {
       case Right(company) => println(company)
       case Left(ex) => println(s"ooops something wrong ${ex}")
     }
   }
 }
 
+/********************************************************************/
 
 case class File2(`type`: String, value: String)
 
