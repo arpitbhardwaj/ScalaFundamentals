@@ -47,13 +47,32 @@ object SyntacticSugars extends App {
   val myStream = 1 -->: 2 -->: 3 -->: new MyStream[Int]
 
   //syntax sugar #4: multi word method naming
+  class TeenGirl(name: String){
+    def `and then said` (gossip:String):Unit = println(s"$name said $gossip")
+  }
 
+  val chilli =  new TeenGirl("chilli")
+  chilli `and then said` "hey"
 
-  //syntax sugar #5:
+  //syntax sugar #5: infix types
+  class Composite[A, B]
+  val composite: Int Composite String = ???
 
-  //syntax sugar #1:
+  class -->[A, B]
+  val towards: Int --> String = ???
 
-  //syntax sugar #1:
+  //syntax sugar #6: update() is special like apply()
+  val anArray = Array(1,2,3)
+  anArray(2) = 7 //compile rewrites to anArray.update(2,7)
 
-  //syntax sugar #1:
+  //syntax sugar #7: setters and getters for mutable containers
+  class Mutable{
+    private var intMember:Int = 0
+    def member:Int = intMember
+    def member_=(value: Int): Unit =
+      intMember = value
+  }
+
+  val aMutableInstance = new Mutable
+  aMutableInstance.member = 8 //compiler rewrites to aMutableInstance.member_=(8)
 }
