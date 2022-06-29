@@ -2,8 +2,9 @@ package com.ab.circe
 
 import cats.Traverse
 import cats.implicits.catsSyntaxTuple2Semigroupal
+import io.circe
 import io.circe.Decoder.Result
-import io.circe.{ACursor, Decoder, Encoder, HCursor, Json, parser}
+import io.circe.{ACursor, Decoder, Encoder, HCursor, Json, KeyDecoder, jawn, parser}
 import io.circe.generic.semiauto.{deriveDecoder, deriveEncoder}
 import io.circe.jawn.decode
 
@@ -36,6 +37,100 @@ object Product {
       case Right(productObject) => println(productObject)
       case Left(ex) => println(s"Oops some error here ${ex}")
     }
+  }
+}
+/*******************************************Decoding Map***********************************************/
+
+//Decoding Objects
+
+case class ConfigMap(
+                      inputLanguage: String,
+                      outputVoice: String,
+                      botParameters: Map[String,String]
+                    )
+
+object ConfigMap {
+
+  def main(args: Array[String]): Unit = {
+    val inputString: String =
+      """
+        |{
+        |	"inputLanguage": "en-US",
+        |	"outputVoice": "Automatic",
+        |	"botParameters": {
+        |		"accountNO": "123",
+        |		"Name": "Deep",
+        |		"customerANI": "654"
+        |	}
+        |}
+        |""".stripMargin
+
+    import io.circe.generic.auto._
+
+    decode[ConfigMap](inputString) match {
+      case Right(productObject) => println(productObject)
+      case Left(ex) => println(s"Oops some error here ${ex}")
+    }
+  }
+}
+
+/*******************************************Decoding Map***********************************************/
+
+object ConfigMap2 {
+
+  def main(args: Array[String]): Unit = {
+    val inputString: String =
+      """
+        |{
+        |	"inputLanguage": "en-US",
+        |	"outputVoice": "Automatic"
+        |}
+        |""".stripMargin
+
+    /*val decoder = Decoder.decodeMap(KeyDecoder.decodeKeyString, Decoder.decodeString)
+    val result = for {
+      json <- jawn.parse(inputString).toTry
+      map <- decoder.decodeJson(json).toTry
+    } yield map
+
+    val map = result.get
+    println(map)*/
+
+    parser.decode[Map[String,String]](inputString) match {
+      case Right(books) => println(s"Here are the books ${books}")
+      case Left(ex) => println(s"Ooops something error ${ex}")
+    }
+  }
+}
+
+/*******************************************Decoding Map***********************************************/
+
+//Decoding Objects
+
+case class BotParam (fields:Map[String,String])
+
+object ConfigMap3 {
+
+  def main(args: Array[String]): Unit = {
+    val inputString: String =
+      """
+        |{
+        |	"inputLanguage": "en-US",
+        |	"outputVoice": "Automatic",
+        | "botParameters": {
+        |		"accountNO": "123",
+        |		"Name": "Deep",
+        |		"customerANI": "654"
+        |	}
+        |}
+        |""".stripMargin
+
+    implicit val botParamDecoder:Decoder[BotParam] = deriveDecoder[BotParam]
+
+   /* parser.decode[Map[String,Either[String,BotParam]]](inputString) match {
+      case Right(books) => println(s"Here are the books ${books}")
+      case Left(ex) => println(s"Ooops something error ${ex}")
+    }*/
   }
 }
 
