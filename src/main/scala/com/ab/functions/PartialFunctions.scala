@@ -1,56 +1,92 @@
 package com.ab.functions
 
 /**
- * A partial function caters to only a subset of possible data for which it has been defined
+ * A partial function
+ *    caters to only a subset of possible data for which it has been defined
+ *    works on pattern matching
+ *    can have only one parameter type
  */
 object PartialFunctions extends App{
-  //val divide64By = (x:Int) => 64/x
 
-  //println(divide64By(8))
-  //println(divide64By(0))
+  val aFunction = (x:Int) => x+1
 
-  /*val anotherDivide64By = new PartialFunction[Int,Int] {
-    override def isDefinedAt(x: Int): Boolean = x!=0
-    override def apply(x: Int): Int = 64/x
-  }*/
+  val aFussyFunction = (x:Int) =>
+    if (x==1) 42
+    else if (x==2) 56
+    else if(x==5) 999
+    else throw new Exception
 
-  //using pattern matching
-  val anotherDivide64By: PartialFunction[Int,Int] ={
-    case x:Int if x != 0 => 64/x
-  }
-
-  //partial function assignment
-  val aFunction: (Int => Int) = anotherDivide64By
-
-  println("Defined for 8: " + anotherDivide64By.isDefinedAt(8))
-  println(if(anotherDivide64By.isDefinedAt(0)) anotherDivide64By(0))
-
-  val partialFunction: PartialFunction[Int,Int] = {
+  val aNicerFussyFunction = (x:Int) => x match {
     case 1 => 42
-    case 2 => 67
-  }
+    case 2 => 56
+    case 5 => 999
+  } //total function
 
-  //orElse
-  val pfChain = partialFunction.orElse[Int,Int]{
-    case 60 => 9000
-  }
-
-  val modifiedList1 = List(1,2,3).map({
+  val aPartialFunction: PartialFunction[Int, Int] = {
     case 1 => 42
-    case _ => 0
-  })
+    case 2 => 56
+    case 5 => 999
+  }//partial function
 
-  val modifiedList2 = List(1,2,3).map{
-    case 1 => 42
-    case _ => 0
-  }
+  println(aPartialFunction(2))
+  println(aPartialFunction(788)) //throws match error
+
+  //Partial function utilities
+
+  //isDefinedAt
+  println(aPartialFunction.isDefinedAt(78))
 
   //lifting
-  val lifted = partialFunction.lift
+  val lifted = aPartialFunction.lift //Int => Option[Int] //convert from partial func to total func
   println(lifted(2))
   println(lifted(4))
-  println(pfChain(60))
-  pfChain(89) //throws match error
+
+  //orElse
+  val partialFunctionChain = aPartialFunction.orElse[Int,Int]{
+    case 60 => 9000
+  } //another partial function
+
+  println(aPartialFunction(5))
+  println(aPartialFunction(60))
+
+  //PF extends normal/total function
+  //PF are subtype of total function
+  val aTotalFunction: Int => Int = {
+    case 1 => 99
+  }
+
+  //HOF accepts partial function
+  val aMappedList = List(1,2,3).map({
+    case 1 => 42
+    case 2 => 56
+    case 3 => 1000
+  })
+
+  println(aMappedList)
+
+  val aMappedList2 = List(1,2,3).map({
+    case 1 => 42
+    case 2 => 56
+    case 5 => 1000
+  })
+
+  println(aMappedList2) //match error
+
+
+  /*
+  Write a custom manual partial function
+   */
+  val aManualPartialFunction = new PartialFunction[Int, Int] {
+    override def apply(x: Int): Int = x match {
+      case 1 => 42
+      case 2 => 56
+      case 5 => 1000
+    }
+
+    override def isDefinedAt(x: Int): Boolean =
+      x == 1 | x == 2 | x == 5
+  }
+
 
   //type aliases
   type ReceiveFunction = PartialFunction[Any,Unit]
