@@ -1,42 +1,39 @@
 package com.ab.multithreading
 
+import java.util.concurrent.Executors
+
 object MultiThreadDemo extends App {
 
+  //manual threading
   val aThread1 = new Thread(new Runnable {
-    override def run(): Unit = println("I'm running in " + Thread.currentThread().getName)
+    override def run(): Unit = (1 to 5).foreach(_ => println("Hello I'm running in " + Thread.currentThread().getName))
   })
 
-  val aThread2 = new Thread(() => println("I'm running in " + Thread.currentThread().getName))
+  val aThread2 = new Thread(() => (1 to 5).foreach(_ => println("Goodbye I'm running in " + Thread.currentThread().getName)))
 
   aThread1.start()
   aThread2.start()
   aThread1.join()
   aThread2.join()
 
-  //different runs produce different result
+  //executors
+  val pool = Executors.newFixedThreadPool(10)
+  pool.execute(() => println("Hello from thread pool"))
 
-  class BankAccount(@volatile private var amount:Int){
-    def withdraw(money:Int) = this.amount -= money
-    def safeWithdraw(money:Int) = this.synchronized(
-      this.amount -= money
-    )
-  }
+  pool.execute(() => {
+    Thread.sleep(1000)
+    println("Goodbye done after 1 sec")
+  })
 
-  /*
-  BA(10000)
+  pool.execute(() => {
+    Thread.sleep(1000)
+    println("almost done")
+    Thread.sleep(1000)
+    println("Goodbye done after 2 sec")
+  })
 
-  T1 -> Withdraw 1000
-  T2 -> Withdraw 2000
-
-  T1 -> this.amount = 10000 - ... //preempted by the OS
-  T2 -> this.amount = 10000 - 2000 = 8000
-  T1 -> this.amount = 10000 - 1000 = 9000
-
-  result = 1000
-
-  this.amount -= money is not ATOMIC
-
-  either use this.synchronized
-  or @volatile
-   */
+  pool.shutdown() //pool stops accepting new task
+  //pool.execute(() => println("should not appear")) //throws RejectedExecutionException in calling thread
+  //pool.shutdownNow() //throws InterruptedException for waiting task
+  println(pool.isShutdown)
 }
