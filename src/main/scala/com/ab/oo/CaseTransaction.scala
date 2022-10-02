@@ -16,6 +16,7 @@ case object Refund extends Kind
 case class CaseTransaction (name:String, amount:Double, kind:Kind, when:LocalDateTime)
 
 object CaseTransactionRunner extends App{
+  println(Debit.toString)
   val now:LocalDateTime = LocalDateTime.now()
   //below is achieved using apply in companion object
   //but case class add out of the box factory method with name of class

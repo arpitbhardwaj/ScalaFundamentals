@@ -20,6 +20,8 @@ object TuplesDemo extends App{
   //arrow opeartor can be used only for pair
   val t3: (Int,String) = 12 -> "GOG"
 
+  println(t1.copy(_2 = "Goodbye Java"))
+  println(t1.swap)
   //extracting elements
   val x = t3._1
   val y = t3._2

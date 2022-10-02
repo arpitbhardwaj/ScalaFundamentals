@@ -10,6 +10,14 @@ import scala.::
  * Nil extends list
  */
 object ListDemo extends App {
+
+  val aList = List(1,2,3)
+  val prepended = 42 +: aList :+ 45
+  println(prepended)
+
+  val apple5 = List.fill(5)("apple")
+  println(apple5)
+  println(aList.mkString("-|-"))
   //declaration and initialization
   List()//empty list of type nothing
   List(1,2,3,4)
@@ -71,4 +79,7 @@ object ListDemo extends App {
   //infinite list
   //def infiniteList: List[Int] = 1::2::3::infiniteList
   //println(sum(infiniteList))
+
+  val names = List("Bob", "James", "Angeli", "Mukes", "Rames")
+  println(names.groupBy(name => name.charAt(0)))
 }
