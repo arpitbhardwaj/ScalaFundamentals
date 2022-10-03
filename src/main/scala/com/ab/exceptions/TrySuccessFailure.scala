@@ -6,7 +6,7 @@ import com.ab.oo.DividendRecord
 import java.io.{BufferedReader, FileReader}
 import scala.annotation.tailrec
 import scala.io.{BufferedSource, Source, StdIn}
-import scala.util.{Failure, Success, Try, Using}
+import scala.util.{Failure, Random, Success, Try, Using}
 
 /**
  * @Arpit Bhardwaj
@@ -16,6 +16,71 @@ import scala.util.{Failure, Success, Try, Using}
  *    after the operation is complete it releases resource in reverse order of creation
  */
 object TrySuccessFailure extends App {
+
+  val aSuccess = Success(4)
+  val aFailure = Failure(new RuntimeException("Failure"))
+
+  println(aSuccess)
+  println(aFailure)
+
+  //Work with unsafe apis
+  def unsafeMethod():String = throw new RuntimeException("Runtime Exception")
+  //val result = Some(unsafeMethod()) //WRONG
+  val potentialFailure = Try(unsafeMethod())
+  println(potentialFailure)
+
+  //chained method
+  def backupMethod(): Try[String] = Failure(new RuntimeException())
+  val chainedResult = Try(unsafeMethod()).orElse(Try(backupMethod()))
+
+  //Design unsafe apis
+  def betterUnsafeMethod(): Try[String] = Failure(new RuntimeException)
+  def betterBackupMethod(): Try[String] = Success("A Valid Result")
+  val betterChainedResult = betterUnsafeMethod() orElse betterBackupMethod()
+
+  println(potentialFailure.isSuccess)
+
+  println(aSuccess.map(_ * 2))
+  println(aSuccess.filter(x => x > 10))
+  println(aSuccess.flatMap(x => Success(x * 10)))
+
+
+  val hostname = "122:23:43:2"
+  val port = "80"
+  def renderHtml(page:String) = println(page)
+
+  class Connection{
+    def get(url: String): String = {
+      val random = new Random(System.nanoTime())
+      if (random.nextBoolean()) "<html>...</html>"
+      else throw new RuntimeException
+    }
+    def getSafe(url: String): Try[String] = Try(get(url))
+  }
+
+  object HttpService {
+    val random = new Random(System.nanoTime())
+    def  getConnection(host:String, port:String): Connection =
+      if (random.nextBoolean()) new Connection
+      else throw new RuntimeException("Port exhausted")
+
+    def  getSafeConnection(host:String, port:String): Try[Connection] = Try(getConnection(host, port))
+  }
+
+  val possibleConnection = HttpService.getSafeConnection(hostname,port)
+  val possibleHtml = possibleConnection.flatMap(c => c.getSafe("/home"))
+  possibleHtml.foreach(renderHtml)
+
+  //chained method
+  HttpService.getSafeConnection(hostname,port)
+      .flatMap(c => c.getSafe("/home"))
+    .foreach(renderHtml)
+
+  val forConnectionStatus = for {
+    c <- HttpService.getSafeConnection(hostname,port)
+    h <- c.getSafe("/home")
+  } yield renderHtml(h)
+
   def getLinesFromFile(fileName:String):Try[BufferedSource] = {
     Try(Source.fromFile(fileName))
   }
