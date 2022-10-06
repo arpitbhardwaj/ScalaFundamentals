@@ -4,6 +4,11 @@ package com.ab.basic
  * Arpit Bhardwaj
  *
  *
+ * Features of Pattern Matching (PM)
+ *  cases are matched in order
+ *  what if no case match? MatchError
+ *  type of PM expression? unified type of all the types in all the cases
+ *  PM works well with case classes
  */
 object PatternMatch extends App {
   var amount = 101
@@ -57,6 +62,16 @@ object PatternMatch extends App {
     case Array(_,_,t) => println("second " + t)
   }
 
+  //1 - Constants
+  val x:Any = "Scala"
+
+  val constants = x match {
+    case 1 => "a number"
+    case "Scala" => "The Scala"
+    case true => "The truth"
+    case PatternMatch => "a Singleton object"
+  }
+
   //a tuple is a collection like an array but doesn't require the element of the same type
   val aTuple = ("NZD",100)
   println(aTuple._1)
@@ -67,10 +82,14 @@ object PatternMatch extends App {
 
   //finding elements using pattern match
   //extractor pattern
-  val names = List("Dale","Susan","Bob","Jen")
-  names match {
+  val names1 = List("Dale","Susan","Bob","Jen")
+  val names2 = List("Honey","Yoo","Bob","Jen")
+  val names3 = List("Dale","Yoo","Bob","Hey")
+  names3 match {
     case List("Dale",_,_) => println("Dale") //throws match error if there is no default case
     case List(_,"Susan",_*) => println("Susan")
+    case "Honey" :: List(_*) => println("Honey") //infix pattern
+    case List("Dale","Yoo","Bob") :+ "Hey" => println("Hey")
     case _ => println("Not found")
   }
   //constructor pattern match
@@ -80,14 +99,24 @@ object PatternMatch extends App {
   //apply(a,b) -> object(a,b)
   //unapply(object(a,b)) -> a,b
 
-  val person  = Person("Arpit",32)
+  //val person  = Person("Arpit",32)
+  val person  = Person("Mino",33)
   person match {
     case Person("Dale",_) => println("found Dale")
     case Person("Arpit",_) => println("found Arpit")
+    case Person(n,a) => println(s"found $n having age $a")
   }
+
+  //name bindings
+  names3 match {
+    case aNonEmptyList @ List("Dale",_,_,_) => println(aNonEmptyList)
+    //case List(_,rest @ List("Susan",_*)) => println(rest)
+    case _ => println("Not found")
+  }
+
 }
 
-abstract class Currency
+sealed class Currency
 case class USD() extends Currency
 case class CAD() extends Currency
 case class NZD() extends Currency
